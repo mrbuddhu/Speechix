@@ -3,7 +3,8 @@
 import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { authAPI, auth } from "@/lib/auth";
+import { auth } from "@/lib/auth";
+import { authAPI } from "@/lib/api";
 import { useToast } from "@/components/ToastProvider";
 import { ToastProvider } from "@/components/ToastProvider";
 import { IoMic, IoMail, IoLockClosed } from "react-icons/io5";
