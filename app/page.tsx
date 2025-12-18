@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { IoMic, IoSparkles, IoGlobe, IoShieldCheckmark } from "react-icons/io5";
+import { Mic, Sparkles, Globe, Shield, ArrowRight } from "lucide-react";
 import { auth } from "@/lib/auth";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function LandingPage() {
   const router = useRouter();
@@ -14,138 +16,136 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-dark-50 via-dark-100 to-dark-200">
+    <div className="min-h-screen bg-gradient-to-b from-background via-background to-muted/20">
       {/* Header */}
-      <header className="border-b border-primary-500/30 bg-dark-50/90 backdrop-blur-sm sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <header className="border-b sticky top-0 z-50 bg-background/80 backdrop-blur-sm">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center gap-2">
-              <IoMic className="w-8 h-8 text-primary-400" />
-              <span className="text-2xl font-bold bg-gradient-to-r from-primary-400 to-accent-400 bg-clip-text text-transparent">Speechix</span>
+              <Mic className="w-8 h-8 text-primary" />
+              <span className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+                Speechix
+              </span>
             </div>
             <div className="flex items-center gap-4">
-              <Link
-                href="/login"
-                className="text-gray-300 hover:text-white px-4 py-2 rounded-lg hover:bg-primary-500/20 transition-colors"
-              >
-                Sign In
-              </Link>
-              <Link
-                href="/register"
-                className="bg-gradient-to-r from-primary-500 to-accent-500 text-white px-6 py-2 rounded-lg hover:from-primary-600 hover:to-accent-600 transition-all font-medium shadow-lg shadow-primary-500/50"
-              >
-                Get Started
-              </Link>
+              <Button variant="ghost" asChild>
+                <Link href="/login">Sign In</Link>
+              </Button>
+              <Button asChild>
+                <Link href="/register">Get Started</Link>
+              </Button>
             </div>
           </div>
         </div>
       </header>
 
       {/* Hero Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
-        <div className="text-center">
-          <h1 className="text-5xl lg:text-6xl font-bold text-white mb-6">
+      <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
+        <div className="text-center space-y-8">
+          <h1 className="text-5xl lg:text-6xl font-bold tracking-tight">
             Speechix
             <br />
-            <span className="bg-gradient-to-r from-primary-400 via-accent-400 to-pink-400 bg-clip-text text-transparent">AI That Speaks Like You</span>
+            <span className="bg-gradient-to-r from-primary via-purple-500 to-pink-500 bg-clip-text text-transparent">
+              AI That Speaks Like You
+            </span>
           </h1>
-          <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Create natural, human-like voices with AI voice cloning technology.
             Transform text into speech that sounds exactly like you or any voice
             you choose.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/register"
-              className="bg-gradient-to-r from-primary-500 to-accent-500 text-white px-8 py-4 rounded-lg hover:from-primary-600 hover:to-accent-600 transition-all font-semibold text-lg shadow-lg shadow-primary-500/50"
-            >
-              Get Started Free
-            </Link>
-            <Link
-              href="/login"
-              className="border-2 border-primary-500 text-white px-8 py-4 rounded-lg hover:bg-primary-500/20 transition-colors font-semibold text-lg"
-            >
-              Sign In
-            </Link>
-            <button
-              onClick={handleGuestMode}
-              className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-4 rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all font-semibold text-lg shadow-lg shadow-purple-500/50"
-            >
+            <Button size="lg" asChild>
+              <Link href="/register">
+                Get Started Free
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+            <Button size="lg" variant="outline" asChild>
+              <Link href="/login">Sign In</Link>
+            </Button>
+            <Button size="lg" variant="secondary" onClick={handleGuestMode}>
               Continue as Guest
-            </button>
+            </Button>
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <h2 className="text-3xl font-bold text-center text-white mb-12">
-          Powerful Features
-        </h2>
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          <div className="bg-gradient-to-br from-primary-500/20 to-accent-500/20 p-6 rounded-xl border border-primary-500/30 backdrop-blur-sm hover:border-primary-400 transition-all">
-            <div className="w-12 h-12 bg-gradient-to-br from-primary-400 to-accent-400 rounded-lg flex items-center justify-center mb-4">
-              <IoMic className="w-6 h-6 text-white" />
-            </div>
-            <h3 className="text-xl font-semibold text-white mb-2">
-              Voice Cloning
-            </h3>
-            <p className="text-gray-300">
-              Clone any voice with just a few seconds of audio. Create
-              personalized voices that sound natural and authentic.
-            </p>
-          </div>
+      <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <h2 className="text-3xl font-bold text-center mb-12">Powerful Features</h2>
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <Card className="border-2 hover:border-primary/50 transition-colors">
+            <CardHeader>
+              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                <Mic className="w-6 h-6 text-primary" />
+              </div>
+              <CardTitle>Voice Cloning</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CardDescription>
+                Clone any voice with just a few seconds of audio. Create
+                personalized voices that sound natural and authentic.
+              </CardDescription>
+            </CardContent>
+          </Card>
 
-          <div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 p-6 rounded-xl border border-purple-500/30 backdrop-blur-sm hover:border-purple-400 transition-all">
-            <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-pink-400 rounded-lg flex items-center justify-center mb-4">
-              <IoSparkles className="w-6 h-6 text-white" />
-            </div>
-            <h3 className="text-xl font-semibold text-white mb-2">
-              AI-Powered
-            </h3>
-            <p className="text-gray-300">
-              Advanced AI technology ensures high-quality voice synthesis with
-              natural intonation and emotion.
-            </p>
-          </div>
+          <Card className="border-2 hover:border-primary/50 transition-colors">
+            <CardHeader>
+              <div className="w-12 h-12 bg-purple-500/10 rounded-lg flex items-center justify-center mb-4">
+                <Sparkles className="w-6 h-6 text-purple-500" />
+              </div>
+              <CardTitle>AI-Powered</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CardDescription>
+                Advanced AI technology ensures high-quality voice synthesis with
+                natural intonation and emotion.
+              </CardDescription>
+            </CardContent>
+          </Card>
 
-          <div className="bg-gradient-to-br from-blue-500/20 to-cyan-500/20 p-6 rounded-xl border border-blue-500/30 backdrop-blur-sm hover:border-blue-400 transition-all">
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-cyan-400 rounded-lg flex items-center justify-center mb-4">
-              <IoGlobe className="w-6 h-6 text-white" />
-            </div>
-            <h3 className="text-xl font-semibold text-white mb-2">
-              Multi-Language
-            </h3>
-            <p className="text-gray-300">
-              Support for multiple languages and accents. Generate speech in the
-              language you need.
-            </p>
-          </div>
+          <Card className="border-2 hover:border-primary/50 transition-colors">
+            <CardHeader>
+              <div className="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center mb-4">
+                <Globe className="w-6 h-6 text-blue-500" />
+              </div>
+              <CardTitle>Multi-Language</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CardDescription>
+                Support for multiple languages and accents. Generate speech in the
+                language you need.
+              </CardDescription>
+            </CardContent>
+          </Card>
 
-          <div className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 p-6 rounded-xl border border-green-500/30 backdrop-blur-sm hover:border-green-400 transition-all">
-            <div className="w-12 h-12 bg-gradient-to-br from-green-400 to-emerald-400 rounded-lg flex items-center justify-center mb-4">
-              <IoShieldCheckmark className="w-6 h-6 text-white" />
-            </div>
-            <h3 className="text-xl font-semibold text-white mb-2">
-              Secure & Private
-            </h3>
-            <p className="text-gray-300">
-              Your voice data is encrypted and stored securely. Full control over
-              your generated content.
-            </p>
-          </div>
+          <Card className="border-2 hover:border-primary/50 transition-colors">
+            <CardHeader>
+              <div className="w-12 h-12 bg-green-500/10 rounded-lg flex items-center justify-center mb-4">
+                <Shield className="w-6 h-6 text-green-500" />
+              </div>
+              <CardTitle>Secure & Private</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CardDescription>
+                Your voice data is encrypted and stored securely. Full control over
+                your generated content.
+              </CardDescription>
+            </CardContent>
+          </Card>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-primary-500/30 bg-dark-50/50 mt-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <footer className="border-t mt-20">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center gap-2 mb-4 md:mb-0">
-              <IoMic className="w-6 h-6 text-primary-400" />
-              <span className="text-xl font-bold bg-gradient-to-r from-primary-400 to-accent-400 bg-clip-text text-transparent">Speechix</span>
+              <Mic className="w-6 h-6 text-primary" />
+              <span className="text-xl font-bold">Speechix</span>
             </div>
-            <p className="text-gray-400 text-sm">
+            <p className="text-sm text-muted-foreground">
               © 2025 Speechix. All rights reserved.
             </p>
           </div>
@@ -154,4 +154,3 @@ export default function LandingPage() {
     </div>
   );
 }
-

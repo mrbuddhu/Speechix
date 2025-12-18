@@ -2,8 +2,10 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { IoMic, IoLogOut, IoMenu, IoClose } from "react-icons/io5";
+import { Mic, LogOut, Menu, X, Sparkles, History, User } from "lucide-react";
 import { auth } from "@/lib/auth";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 interface SidebarProps {
   activeSection: string;
@@ -20,46 +22,53 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
   };
 
   const navItems = [
-    { id: "generate", label: "Generate" },
-    { id: "voices", label: "Voices" },
-    { id: "history", label: "History" },
-    { id: "account", label: "Account" },
+    { id: "generate", label: "Generate", icon: Sparkles },
+    { id: "voices", label: "Voices", icon: Mic },
+    { id: "history", label: "History", icon: History },
+    { id: "account", label: "Account", icon: User },
   ];
 
   const SidebarContent = () => (
     <>
-      <div className="flex items-center gap-2 mb-8 px-4">
-        <IoMic className="w-8 h-8 text-primary-400" />
-        <span className="text-xl font-bold bg-gradient-to-r from-primary-400 to-accent-400 bg-clip-text text-transparent">Speechix</span>
+      <div className="flex items-center gap-2 mb-8 px-4 pt-6">
+        <Mic className="w-8 h-8 text-primary" />
+        <span className="text-xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+          Speechix
+        </span>
       </div>
 
       <nav className="flex-1 space-y-2 px-4">
-        {navItems.map((item) => (
-          <button
-            key={item.id}
-            onClick={() => {
-              onSectionChange(item.id);
-              setIsMobileOpen(false);
-            }}
-            className={`w-full text-left px-4 py-3 rounded-lg transition-all ${
-              activeSection === item.id
-                ? "bg-gradient-to-r from-primary-500 to-accent-500 text-white shadow-lg shadow-primary-500/50"
-                : "text-gray-300 hover:bg-primary-500/20 hover:text-white"
-            }`}
-          >
-            {item.label}
-          </button>
-        ))}
+        {navItems.map((item) => {
+          const Icon = item.icon;
+          return (
+            <Button
+              key={item.id}
+              variant={activeSection === item.id ? "default" : "ghost"}
+              className={cn(
+                "w-full justify-start",
+                activeSection === item.id && "bg-primary"
+              )}
+              onClick={() => {
+                onSectionChange(item.id);
+                setIsMobileOpen(false);
+              }}
+            >
+              <Icon className="mr-2 h-4 w-4" />
+              {item.label}
+            </Button>
+          );
+        })}
       </nav>
 
       <div className="px-4 pb-4">
-        <button
+        <Button
+          variant="ghost"
+          className="w-full justify-start text-destructive hover:text-destructive hover:bg-destructive/10"
           onClick={handleLogout}
-          className="w-full text-left px-4 py-3 rounded-lg text-gray-300 hover:bg-red-500/20 hover:text-red-400 transition-colors flex items-center gap-2"
         >
-          <IoLogOut className="w-5 h-5" />
+          <LogOut className="mr-2 h-4 w-4" />
           Logout
-        </button>
+        </Button>
       </div>
     </>
   );
@@ -67,34 +76,36 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
   return (
     <>
       {/* Mobile menu button */}
-      <button
+      <Button
+        variant="outline"
+        size="icon"
+        className="lg:hidden fixed top-4 left-4 z-50"
         onClick={() => setIsMobileOpen(!isMobileOpen)}
-        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-dark-100 rounded-lg shadow-lg border border-primary-500/30 backdrop-blur-sm"
       >
         {isMobileOpen ? (
-          <IoClose className="w-6 h-6 text-white" />
+          <X className="h-5 w-5" />
         ) : (
-          <IoMenu className="w-6 h-6 text-white" />
+          <Menu className="h-5 w-5" />
         )}
-      </button>
+      </Button>
 
       {/* Mobile overlay */}
       {isMobileOpen && (
         <div
-          className="lg:hidden fixed inset-0 bg-black/70 z-40"
+          className="lg:hidden fixed inset-0 bg-background/80 backdrop-blur-sm z-40"
           onClick={() => setIsMobileOpen(false)}
         />
       )}
 
       {/* Sidebar */}
       <aside
-        className={`fixed lg:static inset-y-0 left-0 w-64 bg-dark-100/90 backdrop-blur-sm border-r border-primary-500/30 z-40 flex flex-col transition-transform lg:translate-x-0 ${
-          isMobileOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={cn(
+          "fixed lg:static inset-y-0 left-0 w-64 border-r bg-card z-40 flex flex-col transition-transform",
+          isMobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+        )}
       >
         <SidebarContent />
       </aside>
     </>
   );
 }
-

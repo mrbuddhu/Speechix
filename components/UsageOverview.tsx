@@ -1,7 +1,10 @@
 "use client";
 
 import { User } from "@/lib/auth";
-import { IoTime, IoCard, IoCheckmarkCircle } from "react-icons/io5";
+import { Clock, CreditCard, CheckCircle2, AlertCircle } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface UsageOverviewProps {
   user: User | null;
@@ -22,80 +25,97 @@ export default function UsageOverview({ user }: UsageOverviewProps) {
   const isGuest = user?.id === "guest";
 
   return (
-    <div className="bg-gradient-to-br from-dark-100/80 to-dark-200/80 rounded-xl shadow-lg border border-primary-500/30 backdrop-blur-sm p-6">
-      <h2 className="text-2xl font-bold text-white mb-6">Usage & Subscription</h2>
-      {isGuest && (
-        <div className="mb-4 p-3 bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-500/30 rounded-lg">
-          <p className="text-sm text-purple-300">👤 You're exploring as a guest. Sign up to save your work!</p>
-        </div>
-      )}
+    <Card className="border-2">
+      <CardHeader>
+        <CardTitle>Usage & Subscription</CardTitle>
+        {isGuest && (
+          <Alert className="mt-4">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>
+              You're exploring as a guest. Sign up to save your work!
+            </AlertDescription>
+          </Alert>
+        )}
+      </CardHeader>
+      <CardContent className="space-y-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <Card>
+            <CardHeader className="pb-2">
+              <CardDescription>Total Credits</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center gap-2">
+                <CreditCard className="h-5 w-5 text-primary" />
+                <div className="text-2xl font-bold">{totalCredits}</div>
+              </div>
+            </CardContent>
+          </Card>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <div className="bg-gradient-to-br from-primary-500/20 to-accent-500/20 rounded-lg p-4 border border-primary-500/30">
-          <div className="flex items-center gap-2 mb-2">
-            <IoCard className="w-5 h-5 text-primary-400" />
-            <span className="text-sm text-gray-300">Total Credits</span>
+          <Card>
+            <CardHeader className="pb-2">
+              <CardDescription>Used Credits</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="h-5 w-5 text-green-500" />
+                <div className="text-2xl font-bold">{usedCredits}</div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-2">
+              <CardDescription>Remaining</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center gap-2">
+                <CreditCard className="h-5 w-5 text-blue-500" />
+                <div className="text-2xl font-bold">{remainingCredits}</div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-2">
+              <CardDescription>Subscription</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center gap-2">
+                <Clock className="h-5 w-5 text-orange-500" />
+                <div>
+                  {subscriptionExpiry ? (
+                    <>
+                      <div className="text-lg font-bold">
+                        {daysUntilExpiry !== null && daysUntilExpiry > 0
+                          ? `${daysUntilExpiry} days`
+                          : "Expired"}
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        {subscriptionExpiry.toLocaleDateString()}
+                      </div>
+                    </>
+                  ) : (
+                    <div className="text-lg font-bold text-muted-foreground">
+                      No subscription
+                    </div>
+                  )}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="space-y-2">
+          <div className="flex justify-between text-sm">
+            <span>Usage Progress</span>
+            <span>{Math.round(usagePercent)}%</span>
           </div>
-          <p className="text-2xl font-bold text-white">{totalCredits}</p>
-        </div>
-
-        <div className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-lg p-4 border border-green-500/30">
-          <div className="flex items-center gap-2 mb-2">
-            <IoCheckmarkCircle className="w-5 h-5 text-green-400" />
-            <span className="text-sm text-gray-300">Used Credits</span>
-          </div>
-          <p className="text-2xl font-bold text-white">{usedCredits}</p>
-        </div>
-
-        <div className="bg-gradient-to-br from-blue-500/20 to-cyan-500/20 rounded-lg p-4 border border-blue-500/30">
-          <div className="flex items-center gap-2 mb-2">
-            <IoCard className="w-5 h-5 text-blue-400" />
-            <span className="text-sm text-gray-300">Remaining</span>
-          </div>
-          <p className="text-2xl font-bold text-white">{remainingCredits}</p>
-        </div>
-
-        <div className="bg-gradient-to-br from-orange-500/20 to-yellow-500/20 rounded-lg p-4 border border-orange-500/30">
-          <div className="flex items-center gap-2 mb-2">
-            <IoTime className="w-5 h-5 text-orange-400" />
-            <span className="text-sm text-gray-300">Subscription</span>
-          </div>
-          {subscriptionExpiry ? (
-            <div>
-              <p className="text-lg font-bold text-white">
-                {daysUntilExpiry !== null && daysUntilExpiry > 0
-                  ? `${daysUntilExpiry} days`
-                  : "Expired"}
-              </p>
-              <p className="text-xs text-gray-400">
-                {subscriptionExpiry.toLocaleDateString()}
-              </p>
-            </div>
-          ) : (
-            <p className="text-lg font-bold text-gray-400">No subscription</p>
-          )}
-        </div>
-      </div>
-
-      <div>
-        <div className="flex justify-between text-sm text-gray-300 mb-2">
-          <span>Usage Progress</span>
-          <span>{Math.round(usagePercent)}%</span>
-        </div>
-        <div className="w-full bg-dark-200 rounded-full h-3">
-          <div
-            className={`h-3 rounded-full transition-all ${
-              usagePercent > 90
-                ? "bg-gradient-to-r from-red-500 to-pink-500"
-                : usagePercent > 70
-                ? "bg-gradient-to-r from-yellow-500 to-orange-500"
-                : "bg-gradient-to-r from-primary-500 to-accent-500"
-            }`}
-            style={{ width: `${Math.min(usagePercent, 100)}%` }}
+          <Progress 
+            value={usagePercent} 
+            className={usagePercent > 90 ? "bg-destructive" : ""}
           />
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }
-

@@ -74,7 +74,7 @@ function AppContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-dark-50 via-dark-100 to-dark-200">
+    <div className="min-h-screen bg-gradient-to-b from-background via-background to-muted/20">
       <div className="flex">
         <Sidebar
           activeSection={activeSection}
