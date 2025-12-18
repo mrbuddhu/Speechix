@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Mic, Sparkles, Globe, Shield, ArrowRight, Check, Zap, Users, TrendingUp } from "lucide-react";
+import { Mic, Sparkles, Globe, Shield, ArrowRight, Check, Zap, Users, TrendingUp, Play } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -73,40 +73,99 @@ export default function LandingPage() {
       </header>
 
       {/* Hero Section */}
-      <section className="relative container mx-auto px-6 py-24 lg:py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-purple-500/5 to-pink-500/5 rounded-3xl blur-3xl -z-10" />
-        <div className="max-w-4xl mx-auto text-center space-y-8 relative">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border bg-background/80 backdrop-blur-sm text-sm mb-4 shadow-sm">
-            <Zap className="w-4 h-4 text-primary" />
+      <section className="relative container mx-auto px-6 py-20 lg:py-32 overflow-hidden">
+        {/* Animated Background Elements */}
+        <div className="absolute inset-0 overflow-hidden -z-10">
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br from-primary/5 via-purple-500/5 to-pink-500/5 rounded-full blur-3xl" />
+        </div>
+
+        <div className="max-w-5xl mx-auto text-center space-y-8 relative">
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border bg-background/80 backdrop-blur-sm text-sm mb-4 shadow-sm hover:shadow-md transition-shadow">
+            <Zap className="w-4 h-4 text-primary animate-pulse" />
             <span className="font-medium">Powered by advanced AI</span>
+            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
           </div>
+
+          {/* Main Headline */}
           <div className="space-y-6">
-            <h1 className="text-5xl lg:text-7xl font-bold tracking-tight leading-tight">
-              Clone Any Voice.
-              <br />
-              <span className="bg-gradient-to-r from-primary via-purple-500 to-pink-500 bg-clip-text text-transparent">
+            <h1 className="text-5xl lg:text-7xl xl:text-8xl font-bold tracking-tight leading-[1.1]">
+              <span className="block">Clone Any Voice.</span>
+              <span className="block bg-gradient-to-r from-primary via-purple-500 to-pink-500 bg-clip-text text-transparent animate-gradient">
                 Generate Any Speech.
               </span>
             </h1>
-            <p className="text-xl lg:text-2xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+            <p className="text-xl lg:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed font-light">
               Enterprise-grade voice synthesis platform. Create natural, human-like voices
-              at scale with industry-leading accuracy and security.
+              at scale with <span className="font-medium text-foreground">industry-leading accuracy</span> and security.
             </p>
           </div>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6">
-            <Button size="lg" asChild className="h-12 px-8 text-base shadow-lg">
+
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-8">
+            <Button size="lg" asChild className="h-14 px-8 text-base shadow-lg hover:shadow-xl transition-all hover:scale-105">
               <Link href="/register">
                 Start free trial
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
-            <Button size="lg" variant="outline" onClick={handleGuestMode} className="h-12 px-8 text-base">
-              Explore demo
+            <Button size="lg" variant="outline" onClick={handleGuestMode} className="h-14 px-8 text-base border-2 hover:bg-accent">
+              <Play className="mr-2 h-4 w-4" />
+              Watch demo
             </Button>
           </div>
-          <p className="text-sm text-muted-foreground pt-4">
-            No credit card required • 14-day free trial • 100 free credits
-          </p>
+
+          {/* Trust Indicators */}
+          <div className="pt-8 space-y-4">
+            <p className="text-sm text-muted-foreground">
+              No credit card required • 14-day free trial • 100 free credits
+            </p>
+            <div className="flex items-center justify-center gap-8 text-xs text-muted-foreground">
+              <div className="flex items-center gap-2">
+                <Check className="w-4 h-4 text-green-500" />
+                <span>No setup fees</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Check className="w-4 h-4 text-green-500" />
+                <span>Cancel anytime</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Check className="w-4 h-4 text-green-500" />
+                <span>24/7 support</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Floating Cards */}
+        <div className="absolute top-1/2 -translate-y-1/2 left-0 hidden lg:block">
+          <Card className="w-64 p-4 border shadow-lg bg-background/80 backdrop-blur-sm animate-float">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                <Mic className="w-5 h-5 text-primary" />
+              </div>
+              <div>
+                <p className="text-sm font-medium">Voice Quality</p>
+                <p className="text-xs text-muted-foreground">99.9% accuracy</p>
+              </div>
+            </div>
+          </Card>
+        </div>
+
+        <div className="absolute top-1/2 -translate-y-1/2 right-0 hidden lg:block">
+          <Card className="w-64 p-4 border shadow-lg bg-background/80 backdrop-blur-sm animate-float-delayed">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-purple-500/10 flex items-center justify-center">
+                <Sparkles className="w-5 h-5 text-purple-500" />
+              </div>
+              <div>
+                <p className="text-sm font-medium">Processing Speed</p>
+                <p className="text-xs text-muted-foreground">Real-time generation</p>
+              </div>
+            </div>
+          </Card>
         </div>
       </section>
 
@@ -117,12 +176,14 @@ export default function LandingPage() {
             {stats.map((stat, index) => {
               const Icon = stat.icon;
               return (
-                <div key={index} className="text-center">
-                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-primary/10 mb-4">
-                    <Icon className="w-6 h-6 text-primary" />
+                <div key={index} className="text-center group">
+                  <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-primary/10 mb-4 group-hover:scale-110 transition-transform">
+                    <Icon className="w-7 h-7 text-primary" />
                   </div>
-                  <div className="text-3xl font-bold mb-1">{stat.value}</div>
-                  <div className="text-sm text-muted-foreground">{stat.label}</div>
+                  <div className="text-4xl font-bold mb-2 bg-gradient-to-r from-primary to-purple-500 bg-clip-text text-transparent">
+                    {stat.value}
+                  </div>
+                  <div className="text-sm text-muted-foreground font-medium">{stat.label}</div>
                 </div>
               );
             })}
@@ -143,7 +204,7 @@ export default function LandingPage() {
             {features.map((feature, index) => {
               const Icon = feature.icon;
               return (
-                <Card key={index} className="border hover:shadow-lg transition-all duration-300 hover:border-primary/50 group">
+                <Card key={index} className="border hover:shadow-xl transition-all duration-300 hover:border-primary/50 group hover:-translate-y-1">
                   <CardHeader>
                     <div className={`w-12 h-12 rounded-lg bg-muted flex items-center justify-center mb-4 group-hover:scale-110 transition-transform ${feature.color}`}>
                       <Icon className="w-6 h-6" />
@@ -204,7 +265,7 @@ export default function LandingPage() {
               Join thousands of creators and businesses using Speechix to bring their content to life
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" asChild className="h-12 px-8 text-base shadow-lg">
+              <Button size="lg" asChild className="h-12 px-8 text-base shadow-lg hover:shadow-xl transition-all hover:scale-105">
                 <Link href="/register">
                   Start free trial
                   <ArrowRight className="ml-2 h-4 w-4" />
