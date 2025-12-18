@@ -3,7 +3,10 @@
 import { useState, useEffect, useRef } from "react";
 import { voicesAPI, Voice } from "@/lib/api";
 import { useToast } from "@/components/ToastProvider";
-import { IoMic, IoCloudUpload, IoPlay, IoStop, IoCheckmarkCircle } from "react-icons/io5";
+import { Mic, CloudUpload, Play, Stop, CheckCircle2, Upload } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 interface VoiceStudioProps {
   onVoiceSelect: (voiceId: string) => void;
@@ -65,15 +68,12 @@ export default function VoiceStudio({
 
   const handleRecord = async () => {
     if (isRecording) {
-      // Stop recording logic would go here
       setIsRecording(false);
       showToast("Recording stopped. Processing...", "success");
     } else {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         setIsRecording(true);
-        // Recording implementation would go here
-        // For now, just show a message
         showToast("Recording started. Click again to stop.", "success");
       } catch (error) {
         showToast("Microphone access denied", "error");
@@ -84,13 +84,11 @@ export default function VoiceStudio({
   const handlePlay = (voice: Voice) => {
     if (!voice.audioUrl) return;
 
-    // Stop any currently playing audio
     Object.values(audioRefs.current).forEach((audio) => {
       audio.pause();
       audio.currentTime = 0;
     });
 
-    // Play the selected audio
     if (!audioRefs.current[voice.id]) {
       audioRefs.current[voice.id] = new Audio(voice.audioUrl);
       audioRefs.current[voice.id].onended = () => setPlayingId(null);
@@ -110,130 +108,154 @@ export default function VoiceStudio({
   };
 
   return (
-    <div className="bg-gradient-to-br from-dark-100/80 to-dark-200/80 rounded-xl shadow-lg border border-primary-500/30 backdrop-blur-sm p-6">
-      <h2 className="text-2xl font-bold text-white mb-6">Voice Studio</h2>
-
-      <div className="space-y-6">
+    <Card className="border-2">
+      <CardHeader>
+        <CardTitle>Voice Studio</CardTitle>
+        <CardDescription>
+          Upload or record reference audio to create custom voices
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-6">
         {/* Upload and Record Section */}
         <div className="grid md:grid-cols-2 gap-4">
-          <div className="border-2 border-dashed border-primary-500/30 rounded-lg p-6 text-center hover:border-primary-400 transition-colors bg-dark-200/30">
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="audio/*"
-              onChange={handleFileUpload}
-              className="hidden"
-              id="voice-upload"
-            />
-            <label
-              htmlFor="voice-upload"
-              className="cursor-pointer flex flex-col items-center gap-3"
-            >
-              <IoCloudUpload className="w-8 h-8 text-primary-400" />
-              <span className="text-sm font-medium text-gray-300">
-                Upload Reference Audio
-              </span>
-              <span className="text-xs text-gray-400">
-                {isUploading ? "Uploading..." : "Click to browse"}
-              </span>
-            </label>
-          </div>
-
-          <button
-            onClick={handleRecord}
-            className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors flex flex-col items-center gap-3 ${
-              isRecording
-                ? "border-red-400 bg-red-500/20"
-                : "border-primary-500/30 hover:border-primary-400 bg-dark-200/30"
-            }`}
+          <Card
+            className={cn(
+              "border-2 border-dashed cursor-pointer transition-all hover:border-primary hover:bg-accent/5",
+              isUploading && "border-primary bg-accent/5"
+            )}
+            onClick={() => fileInputRef.current?.click()}
           >
-              <IoMic
-                className={`w-8 h-8 ${
-                  isRecording ? "text-red-400" : "text-primary-400"
-                }`}
+            <CardContent className="flex flex-col items-center justify-center p-8 text-center">
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="audio/*"
+                onChange={handleFileUpload}
+                className="hidden"
+                id="voice-upload"
               />
-              <span className="text-sm font-medium text-gray-300">
+              {isUploading ? (
+                <Upload className="w-12 h-12 text-primary animate-pulse mb-4" />
+              ) : (
+                <CloudUpload className="w-12 h-12 text-muted-foreground mb-4" />
+              )}
+              <h3 className="font-semibold mb-2">Upload Reference Audio</h3>
+              <p className="text-sm text-muted-foreground">
+                {isUploading ? "Uploading..." : "Click to browse audio files"}
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card
+            className={cn(
+              "border-2 border-dashed cursor-pointer transition-all",
+              isRecording
+                ? "border-destructive bg-destructive/5 hover:bg-destructive/10"
+                : "hover:border-primary hover:bg-accent/5"
+            )}
+            onClick={handleRecord}
+          >
+            <CardContent className="flex flex-col items-center justify-center p-8 text-center">
+              <Mic
+                className={cn(
+                  "w-12 h-12 mb-4",
+                  isRecording
+                    ? "text-destructive animate-pulse"
+                    : "text-muted-foreground"
+                )}
+              />
+              <h3 className="font-semibold mb-2">
                 {isRecording ? "Recording..." : "Record from Microphone"}
-              </span>
-              <span className="text-xs text-gray-400">
-              {isRecording ? "Click to stop" : "Click to start"}
-            </span>
-          </button>
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                {isRecording ? "Click to stop recording" : "Click to start recording"}
+              </p>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Voices List */}
         <div>
-          <h3 className="text-lg font-semibold text-white mb-4">
-            Your Voices ({voices.length})
-          </h3>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold">Your Voices</h3>
+            <span className="text-sm text-muted-foreground">{voices.length} voices</span>
+          </div>
 
           {isLoading ? (
-            <div className="text-center py-8 text-gray-400">Loading voices...</div>
-          ) : voices.length === 0 ? (
-            <div className="text-center py-8 text-gray-400">
-              No voices yet. Upload or record a voice to get started.
+            <div className="text-center py-12 text-muted-foreground">
+              Loading voices...
             </div>
+          ) : voices.length === 0 ? (
+            <Card>
+              <CardContent className="py-12 text-center">
+                <Mic className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                <p className="text-muted-foreground">
+                  No voices yet. Upload or record a voice to get started.
+                </p>
+              </CardContent>
+            </Card>
           ) : (
             <div className="space-y-3">
               {voices.map((voice) => (
-                <div
+                <Card
                   key={voice.id}
-                  className={`border rounded-lg p-4 flex items-center justify-between ${
-                    selectedVoiceId === voice.id
-                      ? "border-primary-500 bg-gradient-to-r from-primary-500/20 to-accent-500/20"
-                      : "border-primary-500/30 bg-dark-200/30"
-                  }`}
+                  className={cn(
+                    "transition-all hover:shadow-md",
+                    selectedVoiceId === voice.id && "border-primary border-2 shadow-md"
+                  )}
                 >
-                  <div className="flex items-center gap-4 flex-1">
-                    {selectedVoiceId === voice.id && (
-                      <IoCheckmarkCircle className="w-5 h-5 text-primary-600" />
-                    )}
-                    <div>
-                      <p className="font-medium text-white">{voice.name}</p>
-                      <p className="text-sm text-gray-400">
-                        Created {new Date(voice.createdAt).toLocaleDateString()}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    {voice.audioUrl && (
-                      <>
-                        {playingId === voice.id ? (
-                          <button
-                            onClick={handleStop}
-                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                          >
-                            <IoStop className="w-5 h-5" />
-                          </button>
-                        ) : (
-                          <button
-                            onClick={() => handlePlay(voice)}
-                            className="p-2 text-primary-600 hover:bg-primary-50 rounded-lg transition-colors"
-                          >
-                            <IoPlay className="w-5 h-5" />
-                          </button>
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4 flex-1">
+                        {selectedVoiceId === voice.id && (
+                          <CheckCircle2 className="w-5 h-5 text-primary" />
                         )}
-                      </>
-                    )}
-                    <button
-                      onClick={() => onVoiceSelect(voice.id)}
-                      className={`px-4 py-2 rounded-lg font-medium transition-all ${
-                        selectedVoiceId === voice.id
-                          ? "bg-gradient-to-r from-primary-500 to-accent-500 text-white shadow-lg shadow-primary-500/50"
-                          : "bg-dark-200/50 text-gray-300 hover:bg-primary-500/20 hover:text-white border border-primary-500/30"
-                      }`}
-                    >
-                      {selectedVoiceId === voice.id ? "Selected" : "Select"}
-                    </button>
-                  </div>
-                </div>
+                        <div>
+                          <p className="font-medium">{voice.name}</p>
+                          <p className="text-sm text-muted-foreground">
+                            Created {new Date(voice.createdAt).toLocaleDateString()}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        {voice.audioUrl && (
+                          <>
+                            {playingId === voice.id ? (
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={handleStop}
+                              >
+                                <Stop className="h-4 w-4" />
+                              </Button>
+                            ) : (
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => handlePlay(voice)}
+                              >
+                                <Play className="h-4 w-4" />
+                              </Button>
+                            )}
+                          </>
+                        )}
+                        <Button
+                          variant={selectedVoiceId === voice.id ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => onVoiceSelect(voice.id)}
+                        >
+                          {selectedVoiceId === voice.id ? "Selected" : "Select"}
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               ))}
             </div>
           )}
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }
-

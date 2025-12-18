@@ -3,7 +3,11 @@
 import { useState, useEffect, useRef } from "react";
 import { ttsAPI, TTSHistoryItem } from "@/lib/api";
 import { useToast } from "@/components/ToastProvider";
-import { IoPlay, IoStop, IoDownload, IoTime } from "react-icons/io5";
+import { Play, Stop, Download, Clock, RefreshCw } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 export default function GenerationHistory() {
   const { showToast } = useToast();
@@ -31,13 +35,11 @@ export default function GenerationHistory() {
   const handlePlay = (item: TTSHistoryItem) => {
     if (!item.audioUrl) return;
 
-    // Stop any currently playing audio
     Object.values(audioRefs.current).forEach((audio) => {
       audio.pause();
       audio.currentTime = 0;
     });
 
-    // Play the selected audio
     if (!audioRefs.current[item.id]) {
       audioRefs.current[item.id] = new Audio(item.audioUrl);
       audioRefs.current[item.id].onended = () => setPlayingId(null);
@@ -70,89 +72,103 @@ export default function GenerationHistory() {
     document.body.removeChild(link);
   };
 
+  const getStatusVariant = (status: string) => {
+    switch (status) {
+      case "completed":
+        return "default";
+      case "failed":
+        return "destructive";
+      default:
+        return "secondary";
+    }
+  };
+
   return (
-    <div className="bg-gradient-to-br from-dark-100/80 to-dark-200/80 rounded-xl shadow-lg border border-primary-500/30 backdrop-blur-sm p-6">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-white">Generation History</h2>
-        <button
-          onClick={loadHistory}
-          className="text-sm text-primary-400 hover:text-primary-300 font-medium"
-        >
-          Refresh
-        </button>
-      </div>
-
-      {isLoading ? (
-        <div className="text-center py-8 text-gray-400">Loading history...</div>
-      ) : history.length === 0 ? (
-        <div className="text-center py-8 text-gray-400">
-          No generation history yet. Generate your first voice to see it here.
+    <Card className="border-2">
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <div>
+            <CardTitle>Generation History</CardTitle>
+            <CardDescription>
+              View and manage your generated voice recordings
+            </CardDescription>
+          </div>
+          <Button variant="outline" size="icon" onClick={loadHistory}>
+            <RefreshCw className="h-4 w-4" />
+          </Button>
         </div>
-      ) : (
-        <div className="space-y-4">
-          {history.map((item) => (
-            <div
-              key={item.id}
-              className="border border-primary-500/30 rounded-lg p-4 hover:border-primary-400 bg-dark-200/30 transition-colors"
-            >
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex-1">
-                  <p className="text-white font-medium mb-2 line-clamp-2">
-                    {item.text}
-                  </p>
-                  <div className="flex items-center gap-4 text-sm text-gray-400">
-                    <span className="flex items-center gap-1">
-                      <IoTime className="w-4 h-4" />
-                      {new Date(item.createdAt).toLocaleString()}
-                    </span>
-                    <span
-                      className={`px-2 py-1 rounded text-xs font-medium ${
-                        item.status === "completed"
-                          ? "bg-green-100 text-green-800"
-                          : item.status === "failed"
-                          ? "bg-red-100 text-red-800"
-                          : "bg-yellow-100 text-yellow-800"
-                      }`}
-                    >
-                      {item.status}
-                    </span>
-                  </div>
-                </div>
+      </CardHeader>
+      <CardContent>
+        {isLoading ? (
+          <div className="text-center py-12 text-muted-foreground">
+            Loading history...
+          </div>
+        ) : history.length === 0 ? (
+          <Card>
+            <CardContent className="py-12 text-center">
+              <Clock className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+              <p className="text-muted-foreground">
+                No generation history yet. Generate your first voice to see it here.
+              </p>
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="space-y-3">
+            {history.map((item) => (
+              <Card
+                key={item.id}
+                className="transition-all hover:shadow-md"
+              >
+                <CardContent className="p-4">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex-1 space-y-2">
+                      <p className="font-medium line-clamp-2">{item.text}</p>
+                      <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                        <div className="flex items-center gap-1">
+                          <Clock className="h-3 w-3" />
+                          {new Date(item.createdAt).toLocaleString()}
+                        </div>
+                        <Badge variant={getStatusVariant(item.status)}>
+                          {item.status}
+                        </Badge>
+                      </div>
+                    </div>
 
-                {item.audioUrl && (
-                  <div className="flex items-center gap-2">
-                    {playingId === item.id ? (
-                      <button
-                        onClick={handleStop}
-                        className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                        title="Stop"
-                      >
-                        <IoStop className="w-5 h-5" />
-                      </button>
-                    ) : (
-                      <button
-                        onClick={() => handlePlay(item)}
-                        className="p-2 text-primary-400 hover:bg-primary-500/20 rounded-lg transition-colors"
-                        title="Play"
-                      >
-                        <IoPlay className="w-5 h-5" />
-                      </button>
+                    {item.audioUrl && (
+                      <div className="flex items-center gap-2">
+                        {playingId === item.id ? (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={handleStop}
+                          >
+                            <Stop className="h-4 w-4" />
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handlePlay(item)}
+                          >
+                            <Play className="h-4 w-4" />
+                          </Button>
+                        )}
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleDownload(item)}
+                        >
+                          <Download className="h-4 w-4" />
+                        </Button>
+                      </div>
                     )}
-                    <button
-                      onClick={() => handleDownload(item)}
-                        className="p-2 text-gray-400 hover:bg-dark-200/50 rounded-lg transition-colors"
-                      title="Download"
-                    >
-                      <IoDownload className="w-5 h-5" />
-                    </button>
                   </div>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 }
-
