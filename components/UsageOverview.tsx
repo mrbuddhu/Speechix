@@ -25,97 +25,103 @@ export default function UsageOverview({ user }: UsageOverviewProps) {
   const isGuest = user?.id === "guest";
 
   return (
-    <Card className="border-2">
-      <CardHeader>
-        <CardTitle>Usage & Subscription</CardTitle>
-        {isGuest && (
-          <Alert className="mt-4">
-            <AlertCircle className="h-4 w-4" />
-            <AlertDescription>
-              You're exploring as a guest. Sign up to save your work!
-            </AlertDescription>
-          </Alert>
-        )}
-      </CardHeader>
-      <CardContent className="space-y-6">
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardDescription>Total Credits</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center gap-2">
-                <CreditCard className="h-5 w-5 text-primary" />
-                <div className="text-2xl font-bold">{totalCredits}</div>
-              </div>
-            </CardContent>
-          </Card>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+          <p className="text-muted-foreground mt-1">Overview of your account usage</p>
+        </div>
+      </div>
 
-          <Card>
-            <CardHeader className="pb-2">
-              <CardDescription>Used Credits</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-5 w-5 text-green-500" />
-                <div className="text-2xl font-bold">{usedCredits}</div>
-              </div>
-            </CardContent>
-          </Card>
+      {isGuest && (
+        <Alert>
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>
+            You're exploring as a guest. <a href="/register" className="text-primary hover:underline font-medium">Sign up</a> to save your work and access all features.
+          </AlertDescription>
+        </Alert>
+      )}
 
-          <Card>
-            <CardHeader className="pb-2">
-              <CardDescription>Remaining</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center gap-2">
-                <CreditCard className="h-5 w-5 text-blue-500" />
-                <div className="text-2xl font-bold">{remainingCredits}</div>
-              </div>
-            </CardContent>
-          </Card>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Credits</CardTitle>
+            <CreditCard className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{totalCredits.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground mt-1">Available credits</p>
+          </CardContent>
+        </Card>
 
-          <Card>
-            <CardHeader className="pb-2">
-              <CardDescription>Subscription</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center gap-2">
-                <Clock className="h-5 w-5 text-orange-500" />
-                <div>
-                  {subscriptionExpiry ? (
-                    <>
-                      <div className="text-lg font-bold">
-                        {daysUntilExpiry !== null && daysUntilExpiry > 0
-                          ? `${daysUntilExpiry} days`
-                          : "Expired"}
-                      </div>
-                      <div className="text-xs text-muted-foreground">
-                        {subscriptionExpiry.toLocaleDateString()}
-                      </div>
-                    </>
-                  ) : (
-                    <div className="text-lg font-bold text-muted-foreground">
-                      No subscription
-                    </div>
-                  )}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Used Credits</CardTitle>
+            <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{usedCredits.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground mt-1">Credits consumed</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Remaining</CardTitle>
+            <CreditCard className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{remainingCredits.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground mt-1">Credits available</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Subscription</CardTitle>
+            <Clock className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            {subscriptionExpiry ? (
+              <>
+                <div className="text-2xl font-bold">
+                  {daysUntilExpiry !== null && daysUntilExpiry > 0
+                    ? `${daysUntilExpiry}`
+                    : "0"}
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {daysUntilExpiry !== null && daysUntilExpiry > 0
+                    ? `Days remaining`
+                    : "Expired"}
+                </p>
+              </>
+            ) : (
+              <>
+                <div className="text-2xl font-bold">—</div>
+                <p className="text-xs text-muted-foreground mt-1">No active plan</p>
+              </>
+            )}
+          </CardContent>
+        </Card>
+      </div>
 
-        <div className="space-y-2">
-          <div className="flex justify-between text-sm">
-            <span>Usage Progress</span>
-            <span>{Math.round(usagePercent)}%</span>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Usage Overview</CardTitle>
+          <CardDescription>Credit consumption this period</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-muted-foreground">Usage</span>
+            <span className="font-medium">{Math.round(usagePercent)}%</span>
           </div>
-          <Progress 
-            value={usagePercent} 
-            className={usagePercent > 90 ? "bg-destructive" : ""}
-          />
-        </div>
-      </CardContent>
-    </Card>
+          <Progress value={usagePercent} className="h-2" />
+          <div className="flex items-center justify-between text-xs text-muted-foreground">
+            <span>{usedCredits.toLocaleString()} used</span>
+            <span>{totalCredits.toLocaleString()} total</span>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 }

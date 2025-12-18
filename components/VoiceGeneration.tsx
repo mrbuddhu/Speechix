@@ -117,11 +117,11 @@ export default function VoiceGeneration({
   };
 
   return (
-    <Card className="border-2">
+    <Card>
       <CardHeader>
-        <CardTitle>Voice Generation</CardTitle>
+        <CardTitle>Generate Voice</CardTitle>
         <CardDescription>
-          Transform your text into natural-sounding speech
+          Convert text to speech using your selected voice model
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -130,14 +130,14 @@ export default function VoiceGeneration({
             <AlertCircle className="h-4 w-4" />
             <AlertDescription>
               {remainingCredits <= 0
-                ? "You have no remaining credits. Please contact support to add more credits."
+                ? "Insufficient credits. Please upgrade your plan or contact support."
                 : "Please select a voice from the Voice Studio section."}
             </AlertDescription>
           </Alert>
         )}
 
         <div className="space-y-2">
-          <Label htmlFor="text">Text to Generate</Label>
+          <Label htmlFor="text">Text Input</Label>
           <Textarea
             id="text"
             value={text}
@@ -146,14 +146,14 @@ export default function VoiceGeneration({
                 setText(e.target.value);
               }
             }}
-            rows={6}
+            rows={8}
             placeholder="Enter the text you want to convert to speech..."
             disabled={!canGenerate}
-            className="resize-none"
+            className="resize-none font-mono text-sm"
           />
-          <div className="flex justify-between text-sm text-muted-foreground">
-            <span>{text.length} / {maxLength} characters</span>
-            <span>{Math.ceil(text.length / 100)} credits needed</span>
+          <div className="flex justify-between text-xs text-muted-foreground">
+            <span>{text.length.toLocaleString()} / {maxLength.toLocaleString()} characters</span>
+            <span>~{Math.ceil(text.length / 100)} credits</span>
           </div>
         </div>
 
@@ -178,12 +178,12 @@ export default function VoiceGeneration({
           </div>
 
           <div className="space-y-2">
-            <Label>Selected Voice</Label>
-            <div className="h-10 px-3 py-2 rounded-md border bg-muted flex items-center">
+            <Label>Voice Model</Label>
+            <div className="h-10 px-3 py-2 rounded-md border bg-muted/50 flex items-center text-sm">
               {selectedVoiceId ? (
-                <span className="text-sm font-medium">Voice Selected</span>
+                <span className="font-medium">Voice selected</span>
               ) : (
-                <span className="text-sm text-muted-foreground">No voice selected</span>
+                <span className="text-muted-foreground">No voice selected</span>
               )}
             </div>
           </div>
@@ -198,7 +198,7 @@ export default function VoiceGeneration({
           </Alert>
         )}
 
-        <div className="flex gap-4">
+        <div className="flex gap-3">
           <Button
             onClick={handleGenerate}
             disabled={!canGenerate}
@@ -206,13 +206,13 @@ export default function VoiceGeneration({
             size="lg"
           >
             <Play className="mr-2 h-4 w-4" />
-            {isGenerating ? "Generating..." : "Generate Voice"}
+            {isGenerating ? "Generating..." : "Generate"}
           </Button>
 
           {isGenerating && (
             <Button
               onClick={handleCancel}
-              variant="destructive"
+              variant="outline"
               size="lg"
             >
               <Stop className="mr-2 h-4 w-4" />

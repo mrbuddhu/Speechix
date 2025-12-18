@@ -30,44 +30,44 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
 
   const SidebarContent = () => (
     <>
-      <div className="flex items-center gap-2 mb-8 px-4 pt-6">
-        <Mic className="w-8 h-8 text-primary" />
-        <span className="text-xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-          Speechix
-        </span>
+      <div className="flex items-center gap-2.5 px-6 py-5 border-b">
+        <div className="p-1.5 rounded-md bg-primary/10">
+          <Mic className="w-4 h-4 text-primary" />
+        </div>
+        <span className="text-base font-semibold tracking-tight">Speechix</span>
       </div>
 
-      <nav className="flex-1 space-y-2 px-4">
+      <nav className="flex-1 space-y-1 px-3 py-4">
         {navItems.map((item) => {
           const Icon = item.icon;
           return (
             <Button
               key={item.id}
-              variant={activeSection === item.id ? "default" : "ghost"}
+              variant="ghost"
               className={cn(
-                "w-full justify-start",
-                activeSection === item.id && "bg-primary"
+                "w-full justify-start font-normal",
+                activeSection === item.id && "bg-accent text-accent-foreground"
               )}
               onClick={() => {
                 onSectionChange(item.id);
                 setIsMobileOpen(false);
               }}
             >
-              <Icon className="mr-2 h-4 w-4" />
+              <Icon className="mr-2.5 h-4 w-4" />
               {item.label}
             </Button>
           );
         })}
       </nav>
 
-      <div className="px-4 pb-4">
+      <div className="px-3 py-4 border-t">
         <Button
           variant="ghost"
-          className="w-full justify-start text-destructive hover:text-destructive hover:bg-destructive/10"
+          className="w-full justify-start text-muted-foreground hover:text-foreground"
           onClick={handleLogout}
         >
-          <LogOut className="mr-2 h-4 w-4" />
-          Logout
+          <LogOut className="mr-2.5 h-4 w-4" />
+          Sign out
         </Button>
       </div>
     </>
@@ -75,21 +75,15 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
 
   return (
     <>
-      {/* Mobile menu button */}
       <Button
         variant="outline"
         size="icon"
         className="lg:hidden fixed top-4 left-4 z-50"
         onClick={() => setIsMobileOpen(!isMobileOpen)}
       >
-        {isMobileOpen ? (
-          <X className="h-5 w-5" />
-        ) : (
-          <Menu className="h-5 w-5" />
-        )}
+        {isMobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
       </Button>
 
-      {/* Mobile overlay */}
       {isMobileOpen && (
         <div
           className="lg:hidden fixed inset-0 bg-background/80 backdrop-blur-sm z-40"
@@ -97,7 +91,6 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
         />
       )}
 
-      {/* Sidebar */}
       <aside
         className={cn(
           "fixed lg:static inset-y-0 left-0 w-64 border-r bg-card z-40 flex flex-col transition-transform",

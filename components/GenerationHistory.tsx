@@ -7,7 +7,6 @@ import { Play, Stop, Download, Clock, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
 
 export default function GenerationHistory() {
   const { showToast } = useToast();
@@ -84,13 +83,13 @@ export default function GenerationHistory() {
   };
 
   return (
-    <Card className="border-2">
+    <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
             <CardTitle>Generation History</CardTitle>
             <CardDescription>
-              View and manage your generated voice recordings
+              View and manage your generated audio files
             </CardDescription>
           </div>
           <Button variant="outline" size="icon" onClick={loadHistory}>
@@ -100,65 +99,65 @@ export default function GenerationHistory() {
       </CardHeader>
       <CardContent>
         {isLoading ? (
-          <div className="text-center py-12 text-muted-foreground">
-            Loading history...
+          <div className="text-center py-12 text-muted-foreground text-sm">
+            Loading...
           </div>
         ) : history.length === 0 ? (
           <Card>
             <CardContent className="py-12 text-center">
-              <Clock className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-              <p className="text-muted-foreground">
-                No generation history yet. Generate your first voice to see it here.
+              <Clock className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
+              <p className="text-sm text-muted-foreground">
+                No generation history. Generate your first voice to see it here.
               </p>
             </CardContent>
           </Card>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-2">
             {history.map((item) => (
-              <Card
-                key={item.id}
-                className="transition-all hover:shadow-md"
-              >
+              <Card key={item.id} className="hover:bg-accent/50 transition-colors">
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between gap-4">
-                    <div className="flex-1 space-y-2">
-                      <p className="font-medium line-clamp-2">{item.text}</p>
-                      <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                    <div className="flex-1 min-w-0 space-y-2">
+                      <p className="font-medium text-sm line-clamp-2">{item.text}</p>
+                      <div className="flex items-center gap-3 text-xs text-muted-foreground">
                         <div className="flex items-center gap-1">
                           <Clock className="h-3 w-3" />
                           {new Date(item.createdAt).toLocaleString()}
                         </div>
-                        <Badge variant={getStatusVariant(item.status)}>
+                        <Badge variant={getStatusVariant(item.status)} className="text-xs">
                           {item.status}
                         </Badge>
                       </div>
                     </div>
 
                     {item.audioUrl && (
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1 flex-shrink-0">
                         {playingId === item.id ? (
                           <Button
                             variant="ghost"
                             size="icon"
+                            className="h-8 w-8"
                             onClick={handleStop}
                           >
-                            <Stop className="h-4 w-4" />
+                            <Stop className="h-3.5 w-3.5" />
                           </Button>
                         ) : (
                           <Button
                             variant="ghost"
                             size="icon"
+                            className="h-8 w-8"
                             onClick={() => handlePlay(item)}
                           >
-                            <Play className="h-4 w-4" />
+                            <Play className="h-3.5 w-3.5" />
                           </Button>
                         )}
                         <Button
                           variant="ghost"
                           size="icon"
+                          className="h-8 w-8"
                           onClick={() => handleDownload(item)}
                         >
-                          <Download className="h-4 w-4" />
+                          <Download className="h-3.5 w-3.5" />
                         </Button>
                       </div>
                     )}
