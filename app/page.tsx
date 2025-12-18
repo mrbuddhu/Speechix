@@ -72,76 +72,107 @@ export default function LandingPage() {
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="relative container mx-auto px-6 py-20 lg:py-32 overflow-hidden">
-        {/* Animated Background Elements */}
-        <div className="absolute inset-0 overflow-hidden -z-10">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br from-primary/5 via-purple-500/5 to-pink-500/5 rounded-full blur-3xl" />
+      {/* Hero Section with Background Video/Image */}
+      <section className="relative w-full h-screen min-h-[800px] flex items-center justify-center overflow-hidden">
+        {/* Background Video/Image */}
+        <div className="absolute inset-0 z-0">
+          {/* Option 1: Video Background */}
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="absolute inset-0 w-full h-full object-cover"
+            poster="/api/placeholder/1920/1080"
+          >
+            <source src="https://videos.pexels.com/video-files/3045163/3045163-uhd_2560_1440_25fps.mp4" type="video/mp4" />
+            {/* Fallback image if video doesn't load */}
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-purple-500/20 to-pink-500/20" />
+          </video>
+          
+          {/* Option 2: Static Image Background (uncomment to use instead of video) */}
+          {/* <div 
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            style={{
+              backgroundImage: "url('https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=2070')"
+            }}
+          /> */}
+          
+          {/* Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background/90" />
+          <div className="absolute inset-0 bg-gradient-to-r from-background/50 via-transparent to-background/50" />
         </div>
 
-        <div className="max-w-5xl mx-auto text-center space-y-8 relative">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border bg-background/80 backdrop-blur-sm text-sm mb-4 shadow-sm hover:shadow-md transition-shadow">
-            <Zap className="w-4 h-4 text-primary animate-pulse" />
-            <span className="font-medium">Powered by advanced AI</span>
-            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-          </div>
+        {/* Animated Background Elements */}
+        <div className="absolute inset-0 overflow-hidden -z-10">
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-pulse delay-1000" />
+        </div>
 
-          {/* Main Headline */}
-          <div className="space-y-6">
-            <h1 className="text-5xl lg:text-7xl xl:text-8xl font-bold tracking-tight leading-[1.1]">
-              <span className="block">Clone Any Voice.</span>
-              <span className="block bg-gradient-to-r from-primary via-purple-500 to-pink-500 bg-clip-text text-transparent animate-gradient">
-                Generate Any Speech.
-              </span>
-            </h1>
-            <p className="text-xl lg:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed font-light">
-              Enterprise-grade voice synthesis platform. Create natural, human-like voices
-              at scale with <span className="font-medium text-foreground">industry-leading accuracy</span> and security.
-            </p>
-          </div>
+        {/* Content */}
+        <div className="relative z-10 container mx-auto px-6 py-20 lg:py-32">
+          <div className="max-w-5xl mx-auto text-center space-y-8">
+            {/* Badge */}
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border bg-background/80 backdrop-blur-sm text-sm mb-4 shadow-lg hover:shadow-xl transition-shadow">
+              <Zap className="w-4 h-4 text-primary animate-pulse" />
+              <span className="font-medium">Powered by advanced AI</span>
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+            </div>
 
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-8">
-            <Button size="lg" asChild className="h-14 px-8 text-base shadow-lg hover:shadow-xl transition-all hover:scale-105">
-              <Link href="/register">
-                Start free trial
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-            <Button size="lg" variant="outline" onClick={handleGuestMode} className="h-14 px-8 text-base border-2 hover:bg-accent">
-              <Play className="mr-2 h-4 w-4" />
-              Watch demo
-            </Button>
-          </div>
+            {/* Main Headline */}
+            <div className="space-y-6">
+              <h1 className="text-5xl lg:text-7xl xl:text-8xl font-bold tracking-tight leading-[1.1] text-foreground drop-shadow-lg">
+                <span className="block">Clone Any Voice.</span>
+                <span className="block bg-gradient-to-r from-primary via-purple-500 to-pink-500 bg-clip-text text-transparent drop-shadow-2xl">
+                  Generate Any Speech.
+                </span>
+              </h1>
+              <p className="text-xl lg:text-2xl text-foreground/90 max-w-3xl mx-auto leading-relaxed font-light drop-shadow-md">
+                Enterprise-grade voice synthesis platform. Create natural, human-like voices
+                at scale with <span className="font-medium text-foreground">industry-leading accuracy</span> and security.
+              </p>
+            </div>
 
-          {/* Trust Indicators */}
-          <div className="pt-8 space-y-4">
-            <p className="text-sm text-muted-foreground">
-              No credit card required • 14-day free trial • 100 free credits
-            </p>
-            <div className="flex items-center justify-center gap-8 text-xs text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-green-500" />
-                <span>No setup fees</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-green-500" />
-                <span>Cancel anytime</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-green-500" />
-                <span>24/7 support</span>
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-8">
+              <Button size="lg" asChild className="h-14 px-8 text-base shadow-xl hover:shadow-2xl transition-all hover:scale-105 bg-background/90 backdrop-blur-sm border">
+                <Link href="/register">
+                  Start free trial
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+              <Button size="lg" variant="outline" onClick={handleGuestMode} className="h-14 px-8 text-base border-2 hover:bg-background/90 backdrop-blur-sm">
+                <Play className="mr-2 h-4 w-4" />
+                Watch demo
+              </Button>
+            </div>
+
+            {/* Trust Indicators */}
+            <div className="pt-8 space-y-4">
+              <p className="text-sm text-foreground/80 font-medium">
+                No credit card required • 14-day free trial • 100 free credits
+              </p>
+              <div className="flex items-center justify-center gap-8 text-xs text-foreground/70">
+                <div className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-green-500" />
+                  <span>No setup fees</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-green-500" />
+                  <span>Cancel anytime</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-green-500" />
+                  <span>24/7 support</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
         {/* Floating Cards */}
-        <div className="absolute top-1/2 -translate-y-1/2 left-0 hidden lg:block">
-          <Card className="w-64 p-4 border shadow-lg bg-background/80 backdrop-blur-sm animate-float">
+        <div className="absolute top-1/2 -translate-y-1/2 left-8 hidden lg:block z-20">
+          <Card className="w-64 p-4 border shadow-2xl bg-background/90 backdrop-blur-md animate-float">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
                 <Mic className="w-5 h-5 text-primary" />
@@ -154,8 +185,8 @@ export default function LandingPage() {
           </Card>
         </div>
 
-        <div className="absolute top-1/2 -translate-y-1/2 right-0 hidden lg:block">
-          <Card className="w-64 p-4 border shadow-lg bg-background/80 backdrop-blur-sm animate-float-delayed">
+        <div className="absolute top-1/2 -translate-y-1/2 right-8 hidden lg:block z-20">
+          <Card className="w-64 p-4 border shadow-2xl bg-background/90 backdrop-blur-md animate-float-delayed">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-purple-500/10 flex items-center justify-center">
                 <Sparkles className="w-5 h-5 text-purple-500" />
